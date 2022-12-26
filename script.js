@@ -1,9 +1,10 @@
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 var interval_id;
 
-const merchant = "merchant.taler.windfis.ch";
-const auth_token = "y9jgHGtLzA6PSyPcId2n";
-const currency = "MANA";
+const merchant = "pay.tschunk.shop";
+const instance = "test";
+const auth_token = "ficken23";
+const currency = "WICMP";
 
 const modal_background = document.getElementById("modal");
 console.log(modal_background);
@@ -16,9 +17,9 @@ function close_modal() {
 }
 
 function cancel() {
-    console.log("payment canceled");
-    clearInterval(interval_id);
     close_modal();
+    clearInterval(interval_id);
+    console.log("payment canceled");
 }
 
 async function finish() {
@@ -27,7 +28,7 @@ async function finish() {
 }
 
 async function poll_complete(order_id) {
-    let order_status = await fetch(`https://${merchant}/instances/default/private/orders/${order_id}`, {
+    let order_status = await fetch(`https://${merchant}/instances/${instance}/private/orders/${order_id}`, {
         headers: {
         'Authorization': `Bearer secret-token:${auth_token}`,
         }
@@ -48,7 +49,7 @@ async function poll_complete(order_id) {
 }
 
 async function pay(data) {
-    let payment_url = `taler://pay/${merchant}/${data.order_id}/?c=${data.token}`;
+    let payment_url = `taler://pay/${merchant}/instances/${instance}/${data.order_id}/?c=${data.token}`;
     console.log("pay at: ", payment_url);
 
     let payment_href = document.getElementById("payment-url");
@@ -78,7 +79,7 @@ async function pay(data) {
 function buy(text, amount) {
     let body = `{"order":{"amount":"${currency}:${amount}","summary":"${text}","products":[],"extra":"","wire_fee_amortization":1,"max_fee":"${currency}:1","max_wire_fee":"${currency}:1"},"inventory_products":[],"create_token":true}`
 
-    fetch(`https://${merchant}/instances/default/private/orders`, {
+    fetch(`https://${merchant}/instances/${instance}/private/orders`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer secret-token:${auth_token}`,
