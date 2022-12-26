@@ -16,10 +16,25 @@ function close_modal() {
     modal_background.style.display = "none";
 }
 
-function cancel() {
+function cancel(order_id) {
     close_modal();
     clearInterval(interval_id);
-    console.log("payment canceled");
+
+    fetch(`https://${merchant}/instances/${instance}/private/orders/${order_id}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer secret-token:${auth_token}`,
+        }
+    })
+    .then(response => {
+        if (response.status !== 204)
+            display_notification(`Warning: Could not delete order ${order_id} in backend, response code ${response.status}`, "warning");
+    })
+    .catch(error => {
+        display_notification(`Error when deleting order ${order_id} in backend: ${error}`, "error");
+    });
+
+    console.log(`order ${order_id} canceled`);
 }
 
 async function finish() {
@@ -60,7 +75,7 @@ async function pay(data) {
     modal_payment.style.display = "block";
 
     let cancelbutton = document.getElementById("cancel-button");
-    cancelbutton.onclick = cancel;
+    cancelbutton.onclick = () => cancel(data.order_id);
 
     let qr = document.getElementById("qr");
     qr.innerHTML = "";
