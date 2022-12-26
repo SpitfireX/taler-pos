@@ -99,6 +99,10 @@ body {
     }
 }
 
+#qr > img {
+    border: 15px solid white;
+}
+
 .check {
     width: 100%;
     height: 100%;
