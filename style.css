@@ -15,11 +15,10 @@ body {
     color: white;
     border-radius: 10px;
     padding: 10px;
-    max-width: 200px;
-    min-width: 200px;
-    max-height: 100px;
-    min-height: 100px;
+    width: 200px;
+    height: 100px;
     text-align: center;
+    font-size: large;
     vertical-align: middle;
     margin: 5px;
 }
@@ -36,14 +35,15 @@ body {
 
 #cancel-button {
     font-weight: bold;
+    font-size: x-large;
     background-color: red;
     color: white;
     border-radius: 10px;
     padding: 10px;
-    width: 100px;
-    height: 50px;
+    width: 200px;
+    height: 75px;
     text-align: center;
-    vertical-align: middle;
+    line-height: 75px;  
     margin: 5px;
 }
 
@@ -57,7 +57,7 @@ body {
     transform: translateY(4px);
 }
 
-.modal {
+.modal-background {
     display: none;
     position: fixed;
     z-index: 1;
@@ -71,6 +71,7 @@ body {
 }
 
 .modal-content {
+    display: none;
     background-color: rgb(39, 39, 39);
     color: white;
     margin: 5% auto;
@@ -104,10 +105,30 @@ body {
 }
 
 .check {
-    width: 100%;
-    height: 100%;
+    width: 60%;
+    height: 60%;
     background-image: url("Eo_circle_green_checkmark.svg");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
+}
+
+#payment-url {
+    margin-top: 20px;
+}
+
+#payment-url:link {
+    color: white;
+}
+
+#payment-url:visited {
+    color: white;
+}
+
+.vertiflex {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }

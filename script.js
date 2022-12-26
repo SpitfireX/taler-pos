@@ -5,9 +5,14 @@ const merchant = "merchant.taler.windfis.ch";
 const auth_token = "y9jgHGtLzA6PSyPcId2n";
 const currency = "MANA";
 
+const modal_background = document.getElementById("modal");
+console.log(modal_background);
+const modal_payment = document.getElementById("modal-content-payment");
+const modal_success = document.getElementById("modal-content-success");
+modal_success.onclick = close_modal;
+
 function close_modal() {
-    let modal = document.getElementById("payment-modal");
-    modal.style.display = "none";
+    modal_background.style.display = "none";
 }
 
 function cancel() {
@@ -17,9 +22,8 @@ function cancel() {
 }
 
 async function finish() {
-    let modalcontent = document.getElementById("payment-modal-content");
-    modalcontent.innerHTML = '<div class="check" onclick="close_modal()"></div>'
-
+    modal_payment.style.display = "none";
+    modal_success.style.display = "block";
 }
 
 async function poll_complete(order_id) {
@@ -44,16 +48,19 @@ async function pay(data) {
     let payment_url = `taler://pay/${merchant}/${data.order_id}/?c=${data.token}`;
     console.log("pay at: ", payment_url);
 
-    let modal = document.getElementById("payment-modal");
-    modal.style.display = "block";
+    let payment_href = document.getElementById("payment-url");
+    payment_href.text = payment_url;
+    payment_href.href = payment_url;
 
-    let modalcontent = document.getElementById("payment-modal-content");
-    modalcontent.innerHTML = `</div><div id="qr"></div><p>Pay at the following URL: <u>${payment_url}</u></p><div class="loader"></div><div id="cancel-button">Cancel</div>`;
+    modal_background.style.display = "block";
+    modal_payment.style.display = "block";
 
     let cancelbutton = document.getElementById("cancel-button");
     cancelbutton.onclick = cancel;
 
-    new QRCode(document.getElementById("qr"), {
+    let qr = document.getElementById("qr");
+    qr.innerHTML = "";
+    new QRCode(qr, {
         text: payment_url,
         width: 256,
         height: 256,

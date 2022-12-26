@@ -6,9 +6,6 @@
 <link rel="stylesheet" href="style.css">
 <style>
 </style>
-<script src="script.js"></script>
-<script src="qrcodejs/qrcode.min.js"></script>
-
 <body>
     <div id="buttons">
         <div class="button" onclick="buy('Club Mate', 2)">Mate</div>
@@ -17,10 +14,29 @@
         <div class="button" onclick="buy('Penis', 69)"">Sexuelle Gefälligkeiten</div>
     </div>
 
-    <div id="payment-modal" class="modal">
-        <div id="payment-modal-content" class="modal-content">
+    <div id="modal" class="modal-background">
+            <div id="modal-content-payment" class="modal-content">
+                <div class="vertiflex">
+                    <h2>Please pay now</h2>
+                    <div>
+                        <div class="vertiflex">
+                            <div id="qr"></div>
+                            <a id="payment-url" href=""></a>
+                        </div>
+                    </div>
+                    <div class="loader"></div>
+                    <div id="cancel-button">Cancel Payment</div>
+                </div>
+            </div>
+            <div id="modal-content-success" class="modal-content">
+                <div class="vertiflex">
+                    <h2>Payment Successful!</h2>
+                    <div class="check" onclick=""></div>
+                    <p>(Tap anywhere to close)</p>
+                </div>
+            </div>
         </div>
-    </div>
 </body>
-
+<script src="script.js"></script>
+<script src="qrcodejs/qrcode.min.js"></script>
 </html>
