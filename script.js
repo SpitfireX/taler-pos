@@ -35,6 +35,9 @@ async function poll_complete(order_id) {
     .then(response => response.json())
     .then(data => {
         return data.order_status;
+    })
+    .catch(error => {
+        display_notification("Error when polling for incoming payment: " + error, "error");
     });
 
     if (order_status === "paid") {
@@ -87,6 +90,20 @@ function buy(text, amount) {
         pay(data);
     })
     .catch(error => {
-        console.log(error);
+        display_notification("Error when initializing payment: " + error, "error");
     });
+}
+
+function display_notification(text, style="") {
+    let area = document.getElementById("notifications");
+
+    let notification = document.createElement("div");
+    notification.className = "notification " + style;
+    notification.textContent = text;
+
+    notification.onclick = () => {
+        notification.remove();
+    };
+
+    area.appendChild(notification);
 }

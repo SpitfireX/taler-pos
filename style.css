@@ -132,3 +132,31 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+
+#notifications {
+    position: absolute;
+    width: 100%;
+    height: 20%;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.notification {
+    margin: 5px;
+    padding: 5px;
+    background-color: grey;
+    color: white;
+    border-radius: 5px;
+}
+
+.error {
+    background-color: red;
+    color: white;
+}
+
+.warning {
+    background-color: gold;
+    color: black;
+}
