@@ -12,6 +12,8 @@ const modal_success = document.getElementById("modal-content-success");
 modal_success.onclick = close_modal;
 
 function close_modal() {
+    modal_payment.style.display = "none";
+    modal_success.style.display = "none";
     modal_background.style.display = "none";
 }
 
