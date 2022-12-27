@@ -62,9 +62,12 @@ async function poll_complete(order_id) {
     }
 }
 
-async function pay(data) {
+async function pay(data, text) {
     let payment_url = `taler://pay/${merchant}/instances/${instance}/${data.order_id}/?c=${data.token}`;
     console.log("pay at: ", payment_url);
+
+    let payment_text = document.getElementById("payment-text");
+    payment_text.innerText = text;
 
     let payment_href = document.getElementById("payment-url");
     payment_href.text = payment_url;
@@ -102,7 +105,7 @@ function buy(text, amount) {
     })
     .then(response => response.json())
     .then(data => {
-        pay(data);
+        pay(data, `Order: ${text}\nDue amount: ${amount} ${currency}`);
     })
     .catch(error => {
         display_notification("Error when initializing payment: " + error, "error");
