@@ -105,7 +105,13 @@ function buy(text, amount) {
         },
         body: body,
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw "Could not POST order.";
+        }
+    })
     .then(data => {
         pay(data, `Order: ${text}\nDue amount: ${amount} ${currency}`);
     })
