@@ -75,10 +75,12 @@ body {
     display: none;
     background-color: rgb(39, 39, 39);
     color: white;
-    margin: 5% auto;
     padding: 20px;
-    width: 80%;
-    height: 80%;
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    bottom: 5%;
+    left: 5%;
     border-radius: 10px;
 }
 
@@ -86,8 +88,8 @@ body {
     border: 16px solid #f3f3f3;
     border-top: 16px solid #616161;
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 70px;
+    height: 70px;
     animation: spin 2s linear infinite;
 }
 
@@ -116,6 +118,7 @@ body {
 
 #payment-url {
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 #payment-url:link {
