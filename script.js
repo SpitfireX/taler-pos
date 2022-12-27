@@ -1,13 +1,12 @@
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 var interval_id;
 
-const merchant = "pay.tschunk.shop";
-const instance = "test";
-const auth_token = "ficken23";
-const currency = "WICMP";
+var merchant = null;
+var instance = null;
+var auth_token = null;
+var currency = null;
 
 const modal_background = document.getElementById("modal");
-console.log(modal_background);
 const modal_payment = document.getElementById("modal-content-payment");
 const modal_success = document.getElementById("modal-content-success");
 modal_success.onclick = close_modal;
@@ -122,4 +121,91 @@ function display_notification(text, style="") {
     };
 
     area.appendChild(notification);
+}
+
+async function configure() {
+    if (document.getElementById("config-form").checkValidity()) {
+        let url = document.getElementById("config-posurl").value;
+        let remember = document.getElementById("config-remember").checked;
+        
+        if (remember)
+            window.localStorage.setItem("pos_url", url);
+
+        load_pos_config(url);
+    }
+}
+
+async function load_pos_config(url) {
+    let pos_config = await fetch(url)
+        .then(response => response.json())
+        .catch(error => {
+            display_notification(`Error when fetching JSON: ${error} Is your URL correct?`, "error");
+            window.localStorage.clear("pos_url"); //delete value so config gets reset
+        });
+
+    if (pos_config !== null) {
+        build_pos(pos_config);
+    } else {
+        display_notification(`Error when loading JSON config from ${url}, data was null.`, "error");
+        window.localStorage.clear("pos_url"); //delete value so config gets reset
+    }
+}
+
+function build_pos(pos_config) {
+    // extract static config info from json payload
+    let url = pos_config.config.base_url;
+    [,merchant,instance] = url.match(/https:\/\/(.+)\/instances\/(.+)\/?/);
+    
+    auth_token = pos_config.config.api_key.split(':')[1];
+    
+    currency = pos_config.products[0].price.split(':')[0];
+    
+    // products can be in multiple categories, thus a map
+    let categories = new Map();
+    for (const c of pos_config.categories) {
+        categories.set(c.id, {"name": c.name, "products": []});
+    }
+
+    for (const p of pos_config.products) {
+        for (const c of p.categories) {
+            categories.get(c)["products"].push(p);
+        }
+    }
+
+    // build dom
+
+    let pos = document.getElementById("pos");
+
+    for (let [i, c] of categories) {
+        let heading = document.createElement("h2");
+        heading.textContent = c.name;
+        pos.appendChild(heading);
+
+        let buttons = document.createElement("div");
+        buttons.className = "buttons";
+        pos.appendChild(buttons);
+
+        for (const p of c.products) {
+            let button = document.createElement("div");
+            button.className = "button";
+            button.textContent = p.description;
+            button.onclick = () => buy(p.description, p.price.split(':')[1]);
+
+            buttons.appendChild(button);
+        }
+    }
+
+    // make stuff visible
+    document.getElementById("config").style.display = "none";
+    pos.style.display = "block";
+}
+
+// skip config view when there is a saved config
+if (window.localStorage.getItem("pos_url")){
+    load_pos_config(window.localStorage.getItem("pos_url"));
+} else {
+    // make config view visible
+    document.getElementById("config").style.display = "flex";
+    // only add event handler for config form when needed
+    document.getElementById("config-submit").onclick = configure;
 }

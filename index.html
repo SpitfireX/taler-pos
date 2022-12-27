@@ -7,12 +7,25 @@
 <style>
 </style>
 <body>
-    <div id="buttons">
-        <div class="button" onclick="buy('Club Mate', 0.00001)">Mate</div>
-        <div class="button" onclick="buy('Bier', 0.00001)">Bier</div>
-        <div class="button" onclick="buy('Wasser', 0.00001)">Wasser</div>
-        <div class="button" onclick="buy('Höhö', 0.00001)"">Sexuelle Gefälligkeiten</div>
+    <div id="config">
+        <h1>Taler POS</h1>
+        <div id="form">
+            <h2>Initial Configuration</h2>
+            <p>To get started, enter the URL to a pos.json file.</p>
+            <form id="config-form" onsubmit="return false">
+                <label for="posurl">URL:</label>
+                <input type="url" name="posurl" id="config-posurl"
+                    placeholder="https://example.com/pos.json"
+                    pattern="https://.*\.json" size="30"
+                    required><br>
+                <label for="remeber">Save Configuration</label>
+                <input type="checkbox" id="config-remember" name="remember"><br>
+                <input type="submit" id="config-submit" value="Load JSON" />
+            </form>
+        </div>
     </div>
+
+    <div id="pos"></div>
 
     <div id="notifications"></div>
 
