@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="style.css">
 <style>
 </style>
+
 <body>
     <div id="config">
         <h1>Taler POS</h1>
@@ -14,10 +15,8 @@
             <p>To get started, enter the URL to a pos.json file.</p>
             <form id="config-form" onsubmit="return false">
                 <label for="posurl">URL:</label>
-                <input type="url" name="posurl" id="config-posurl"
-                    placeholder="https://example.com/pos.json"
-                    pattern="https://.*\.json" size="30"
-                    required><br>
+                <input type="url" name="posurl" id="config-posurl" placeholder="https://example.com/pos.json"
+                    pattern="https://.*\.json" size="30" required><br>
                 <label for="remeber">Save Configuration</label>
                 <input type="checkbox" id="config-remember" name="remember"><br>
                 <input type="submit" id="config-submit" value="Load JSON" />
@@ -25,36 +24,78 @@
         </div>
     </div>
 
-    <div id="pos"></div>
-
-    <div id="notifications"></div>
-
-    <div id="modal" class="modal-background">
-            <div id="modal-content-payment" class="modal-content">
-                <div class="vertiflex">
-                    <h2>Awaiting Payment</h2>
-                    <div class="loader-wrapper">
-                        <div class="loader"></div>
-                    </div>
-                    <p id="payment-text"></p>
-                    <div>
-                        <div class="vertiflex">
-                            <div id="qr"></div>
-                            <a id="payment-url" href=""></a>
-                        </div>
-                    </div>
-                    <div id="cancel-button">Cancel Payment</div>
-                </div>
-            </div>
-            <div id="modal-content-success" class="modal-content">
-                <div class="vertiflex">
-                    <h2>Payment Successful!</h2>
-                    <div class="check" onclick=""></div>
-                    <p>(Tap anywhere to close)</p>
+    <div id="main">
+        <div id="main-area">
+            <div id="pos"></div>
+        </div>
+        <div id="notifications"></div>
+        <div id="basket-area">
+            <div id="basket">
+                <table>
+                    <tr>
+                        <td class="table-num">2</td>
+                        <td class="table-name">Mate</td>
+                        <td class="table-price">1 WICMP</td>
+                    </tr>
+                    <tr>
+                        <td class="table-num">3</td>
+                        <td class="table-name">Tschunk</td>
+                        <td class="table-price">3,5 WICMP</td>
+                    </tr>
+                    <tr>
+                        <td class="table-num">1</td>
+                        <td class="table-name">Wasser</td>
+                        <td class="table-price">0,5 WICMP</td>
+                    </tr>
+                    <tr>
+                        <td class="table-num">10</td>
+                        <td class="table-name">Bier</td>
+                        <td class="table-price">1,5 WICMP</td>
+                    </tr>
+                    <tr>
+                        <td class="table-num">100</td>
+                        <td class="table-name">Slush</td>
+                        <td class="table-price">4 WICMP</td>
+                    </tr>
+                </table>
+                <div id="total">
+                    Total: <span>50,00 WICMP</span>
                 </div>
             </div>
         </div>
+        <div id="basket-buttons">
+            <div id="clear-button" class="button toolbar">Clear</div>
+            <div id="buy-button" class="button toolbar">Buy</div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal-background">
+        <div id="modal-content-payment" class="modal-content">
+            <div class="vertiflex">
+                <h2>Awaiting Payment</h2>
+                <div class="loader-wrapper">
+                    <div class="loader"></div>
+                </div>
+                <p id="payment-text"></p>
+                <div>
+                    <div class="vertiflex">
+                        <div id="qr"></div>
+                        <a id="payment-url" href=""></a>
+                    </div>
+                </div>
+                <div id="cancel-button">Cancel Payment</div>
+            </div>
+        </div>
+        <div id="modal-content-success" class="modal-content">
+            <div class="vertiflex">
+                <h2>Payment Successful!</h2>
+                <div class="check" onclick=""></div>
+                <p>(Tap anywhere to close)</p>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="script.js"></script>
 <script src="qrcodejs/qrcode.min.js"></script>
+
 </html>
