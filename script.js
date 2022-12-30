@@ -48,6 +48,7 @@ class Basket {
 
     clear() {
         this.map.clear();
+        this.render();
     }
 
     render() {
