@@ -8,6 +8,7 @@ var auth_token = null;
 var currency = null;
 
 // dom objects
+const main = document.getElementById("main");
 const basket_area = document.getElementById("basket-area");
 const modal_background = document.getElementById("modal");
 const modal_payment = document.getElementById("modal-content-payment");
@@ -71,7 +72,7 @@ class Basket {
             //total
             let total_div = document.createElement("div");
             total_div.id="total";
-            total_div.innerHTML = `Total: <span>${this.get_total()} ${currency}</span>`;
+            total_div.innerHTML = `Total: <span>${this.get_total().toFixed(2)} ${currency}</span>`;
 
             let div = document.createElement("div");
             div.id = "basket";
@@ -301,7 +302,7 @@ function build_pos(pos_config) {
 
     // make stuff visible
     document.getElementById("config").style.display = "none";
-    pos.style.display = "block";
+    main.style.display = "block";
 }
 
 // skip config view when there is a saved config

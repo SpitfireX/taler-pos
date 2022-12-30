@@ -5,6 +5,10 @@ body {
     overflow: hidden;
 }
 
+#main {
+    display: none;
+}
+
 #main-area {
     position: absolute;
     top: 0;
@@ -27,6 +31,12 @@ body {
 #basket {
     margin: 0 30px;
     font-size: x-large;
+}
+
+#basket-empty {
+    font-size: xx-large;
+    margin-top: 30px;
+    text-align: center;
 }
 
 #basket-buttons {
@@ -229,7 +239,7 @@ body {
 }
 
 #pos {
-    display: none;
+    display: block;
     margin: 0 30px 30px 30px;
     overflow-y: auto;
 }
@@ -238,6 +248,7 @@ body {
     font-size: xx-large;
     border-top: 1px solid grey;
     margin-top: 10px;
+    margin-bottom: 10px;
     padding-top: 10px;
     text-align: left;
 }
