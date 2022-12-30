@@ -129,6 +129,7 @@ function cancel_transaction(order_id) {
 async function finish() {
     modal_payment.style.display = "none";
     modal_success.style.display = "block";
+    basket.clear();
 }
 
 async function poll_complete(order_id) {
