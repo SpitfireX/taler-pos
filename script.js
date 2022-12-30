@@ -1,15 +1,103 @@
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 var interval_id;
 
+// configuration variables, normally initialized from pos.json
 var merchant = null;
 var instance = null;
 var auth_token = null;
 var currency = null;
 
+// dom objects
+const basket_area = document.getElementById("basket-area");
 const modal_background = document.getElementById("modal");
 const modal_payment = document.getElementById("modal-content-payment");
 const modal_success = document.getElementById("modal-content-success");
 modal_success.onclick = close_modal;
+
+class Basket {
+    constructor() {
+        this.map = new Map();
+    }
+
+    // add n products to basket
+    add(product, n) {
+        if (this.map.has(product)) {
+            n += this.map.get(product);
+        }
+        this.map.set(product, n);
+    
+        this.render();
+    }
+
+    // calculate total value of basket
+    get_total() {
+        let total = 0.00;
+        for (let [p, n] of this.map) {
+            let price = p.price.split(":")[1];
+            total += n * parseFloat(price);
+        }
+        return total;
+    }
+
+    get_summary() {
+        return Array.from(this.map).map(([product, n]) => {
+            return `${n} ${product.description}`;
+        })
+        .join(', ');
+    }
+
+    clear() {
+        this.map.clear();
+    }
+
+    render() {
+        //dom
+        if (this.map.size === 0) {
+            basket_area.innerHTML = '<div id="basket"><div id="basket-empty">Empty Basket</div></div>';
+        } else {
+            let table = document.createElement("table");
+
+            // individual products
+            for (let [p, n] of this.map) {
+                let row = document.createElement("tr");
+                let price = p.price.split(":")[1];
+
+                row.innerHTML = `<td class="table-num">${n}</td><td class="table-name">${p.description}</td><td class="table-price">${price} ${currency}</td>`;
+                
+                table.appendChild(row);
+            }
+
+            //total
+            let total_div = document.createElement("div");
+            total_div.id="total";
+            total_div.innerHTML = `Total: <span>${this.get_total()} ${currency}</span>`;
+
+            let div = document.createElement("div");
+            div.id = "basket";
+            div.appendChild(table);
+            div.appendChild(total_div);
+
+            basket_area.innerHTML = "";
+            basket_area.appendChild(div);
+        }
+
+        //event handlers
+        let buy_button = document.getElementById("buy-button");
+        buy_button.onclick = () => {
+            buy(basket);
+            this.render();
+        };
+
+        let clear_button = document.getElementById("clear-button");
+        clear_button.onclick = () => {
+            this.clear();
+            this.render();
+        };
+    }
+}
+
+// basket for things to buy
+var basket = new Basket();
 
 function close_modal() {
     modal_payment.style.display = "none";
@@ -17,7 +105,7 @@ function close_modal() {
     modal_background.style.display = "none";
 }
 
-function cancel(order_id) {
+function cancel_transaction(order_id) {
     close_modal();
     clearInterval(interval_id);
 
@@ -79,7 +167,7 @@ async function pay(data, text) {
     modal_payment.style.display = "block";
 
     let cancelbutton = document.getElementById("cancel-button");
-    cancelbutton.onclick = () => cancel(data.order_id);
+    cancelbutton.onclick = () => cancel_transaction(data.order_id);
 
     let qr = document.getElementById("qr");
     qr.innerHTML = "";
@@ -95,7 +183,9 @@ async function pay(data, text) {
     interval_id = setInterval(poll_complete, 250, data.order_id);
 }
 
-function buy(text, amount) {
+function buy(basket) {
+    let amount = basket.get_total();
+    let text = basket.get_summary();
     let body = `{"order":{"amount":"${currency}:${amount}","summary":"${text}","products":[],"extra":"","wire_fee_amortization":1,"max_fee":"${currency}:1","max_wire_fee":"${currency}:1"},"inventory_products":[],"create_token":true}`
 
     fetch(`https://${merchant}/instances/${instance}/private/orders`, {
@@ -156,6 +246,7 @@ async function load_pos_config(url) {
 
     if (pos_config !== null) {
         build_pos(pos_config);
+        basket.render();
     } else {
         display_notification(`Error when loading JSON config from ${url}, data was null.`, "error");
         window.localStorage.clear("pos_url"); //delete value so config gets reset
@@ -200,7 +291,7 @@ function build_pos(pos_config) {
             let button = document.createElement("div");
             button.className = "button";
             button.textContent = p.description;
-            button.onclick = () => buy(p.description, p.price.split(':')[1]);
+            button.onclick = () => basket.add(p, 1);
 
             buttons.appendChild(button);
         }
