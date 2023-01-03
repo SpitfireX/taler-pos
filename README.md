@@ -1,5 +1,7 @@
 # Taler POS
 
+![](screenshot.png)
+
 A point of sale (POS) webapp for GNU Taler
 
 ## Attributions
