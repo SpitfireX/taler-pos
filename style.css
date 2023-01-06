@@ -70,6 +70,7 @@ body {
     height: 100px;
     font-size: xx-large;
     margin: 5px;
+    flex-shrink: 0.5;
 }
 
 .button:hover {
@@ -299,5 +300,13 @@ body {
         top: 0;
         right: 0;
         flex-direction: column;
+    }
+}
+
+@media (width <= 450px) {
+    .button {
+        width: 125px;
+        height: 80px;
+        font-size: x-large;
     }
 }
