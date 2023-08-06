@@ -3,6 +3,7 @@ var interval_id;
 
 // configuration variables, normally initialized from pos.json
 var merchant = null;
+var merchantlite = null;
 var instance = null;
 var auth_token = null;
 var currency = null;
@@ -111,7 +112,7 @@ function cancel_transaction(order_id) {
     close_modal();
     clearInterval(interval_id);
 
-    fetch(`https://${merchant}/instances/${instance}/private/orders/${order_id}`, {
+    fetch(`https://${merchantlite}/instances/${instance}/private/orders/${order_id}`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer secret-token:${auth_token}`,
@@ -135,7 +136,7 @@ async function finish() {
 }
 
 async function poll_complete(order_id) {
-    let order_status = await fetch(`https://${merchant}/instances/${instance}/private/orders/${order_id}`, {
+    let order_status = await fetch(`https://${merchantlite}/instances/${instance}/private/orders/${order_id}`, {
         headers: {
         'Authorization': `Bearer secret-token:${auth_token}`,
         }
@@ -191,7 +192,7 @@ function buy(basket) {
     let text = basket.get_summary();
     let body = `{"order":{"amount":"${currency}:${amount}","summary":"${text}","products":[],"extra":"","wire_fee_amortization":1,"max_fee":"${currency}:1","max_wire_fee":"${currency}:1"},"inventory_products":[],"create_token":true}`
 
-    fetch(`https://${merchant}/instances/${instance}/private/orders`, {
+    fetch(`https://${merchantlite}/instances/${instance}/private/orders`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer secret-token:${auth_token}`,
@@ -260,6 +261,19 @@ function build_pos(pos_config) {
     // extract static config info from json payload
     let url = pos_config.config.base_url;
     [,merchant,instance] = url.match(/https:\/\/(.+)\/instances\/(.+)\/?/);
+    
+    if (pos_config.config.base_url_lite !== undefined) {
+        let urllite = pos_config.config.base_url_lite;
+	let instancelite = undefined;
+        [,merchantlite,instancelite] = urllite.match(/https:\/\/(.+)\/instances\/(.+)\/?/);
+
+        if (instancelite !== instance) {
+            display_notification(`Error when loading JSON config, base_url and base_url_lite must refer to the same instance`, "error");
+        }
+    }
+    else {
+        merchantlite = merchant;
+    }
     
     auth_token = pos_config.config.api_key.split(':')[1];
     
