@@ -54,7 +54,8 @@ Note that the `pos.json` files are available to anyone who can access the POS te
 your merchant secret token can be used to change any setting of the merchant instance. Namely, it can be used
 to change the payment method (destination IBAN) to an attacker's account.
 
-To remedy this, you can use a reverse proxy which hides the "real" access token internally, and only allows
+To remedy this, you can use a [reverse proxy](https://github.com/Windfisch/taler-merchant-proxy)
+which hides the "real" access token internally, and only allows
 access to very specific order management endpoints using a less secret token which is exposed as described
 above. In this case, point `base_url` to the actual merchant backend, and `base_url_lite` to this proxy.
 Use the less secret token as `api_key`. (The POS terminal will make all requests against `base_url_lite`.
